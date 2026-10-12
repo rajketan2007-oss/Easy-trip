@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Menu, Compass, ArrowUpRight, Sun, Moon, Phone } from 'lucide-react';
+import { Menu, ArrowUpRight, Sun, Moon, Phone } from 'lucide-react';
 import { siteContent } from '../data/content';
 
 interface NavbarProps {

@@ -1,4 +1,4 @@
-import { Compass, Phone, Mail, ArrowUp, MessageSquare } from 'lucide-react';
+import { Phone, Mail, ArrowUp, MessageSquare } from 'lucide-react';
 import { siteContent } from '../data/content';
 
 interface FooterProps {
