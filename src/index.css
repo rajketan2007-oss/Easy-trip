@@ -1,0 +1,257 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #287DFA;
+  --primary-dark: #0F4BD2;
+  --primary-soft: #EAF2FF;
+  --accent: #FF7A1A;
+  --accent-soft: #FFF1E5;
+  --bg: #FFFFFF;
+  --bg-alt: #F5F7FA;
+  --surface: #FFFFFF;
+  --text: #0F294D;
+  --text-muted: #5E6C84;
+  --border: #E3E8EF;
+  --success: #12B76A;
+  --error: #E5484D;
+  color-scheme: light;
+}
+
+.dark {
+  --primary: #3B82F6;
+  --primary-dark: #1D4ED8;
+  --primary-soft: rgba(59, 130, 246, 0.16);
+  --accent: #FF7A1A;
+  --accent-soft: rgba(255, 122, 26, 0.16);
+  --bg: #080E1E;
+  --bg-alt: #0C142B;
+  --surface: #111D3D;
+  --text: #F1F5F9;
+  --text-muted: #94A3B8;
+  --border: #1D3063;
+  --success: #10B981;
+  --error: #EF4444;
+  color-scheme: dark;
+}
+
+/* Mobile friendly scroll & overflow */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Hide scrollbar utility for touch pills */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Lenis smooth scroll */
+html.lenis, html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Clean booking-platform scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #F5F7FA;
+}
+.dark ::-webkit-scrollbar-track {
+  background: #080E1E;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #1D3063;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #287DFA;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #3B82F6;
+}
+
+/* Clean Modern Typography (Booking platform style) */
+.hero-title {
+  font-size: clamp(2.25rem, 5.2vw, 4.8rem);
+  line-height: 1.12;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.section-title {
+  font-size: clamp(1.85rem, 3.6vw, 3.1rem);
+  line-height: 1.18;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.tile-title {
+  font-size: clamp(1.3rem, 2.2vw, 1.85rem);
+  line-height: 1.25;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+/* Trip.com Clean Surfaces & Luxury Cards */
+.card-surface {
+  background: #FFFFFF;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(15, 41, 77, 0.07);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.dark .card-surface {
+  background: #111D3D;
+  border-color: #1D3063;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.card-surface-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-surface-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px rgba(40, 125, 250, 0.18);
+  border-color: rgba(40, 125, 250, 0.4);
+}
+.dark .card-surface-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55), 0 0 20px rgba(59, 130, 246, 0.25);
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+/* Gradient text utilities */
+.text-gradient-primary {
+  background: linear-gradient(135deg, #287DFA 0%, #0F4BD2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.dark .text-gradient-primary {
+  background: linear-gradient(135deg, #60A5FA 0%, #287DFA 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-accent {
+  background: linear-gradient(135deg, #FF7A1A 0%, #E8660B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* International marquee outlined text */
+.text-stroke {
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.55);
+  color: transparent;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.text-stroke:hover {
+  -webkit-text-stroke: 1.5px #FFFFFF;
+  color: #FFFFFF;
+}
+
+/* Modern booking form controls */
+input, select, textarea {
+  background-color: #FFFFFF !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+.dark input, .dark select, .dark textarea {
+  background-color: #0C142B !important;
+  color: #F1F5F9 !important;
+  border-color: #1D3063 !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-muted) !important;
+  opacity: 0.8;
+}
+.dark input::placeholder, .dark textarea::placeholder {
+  color: #94A3B8 !important;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(40, 125, 250, 0.2) !important;
+  outline: none;
+}
+.dark input:focus, .dark select:focus, .dark textarea:focus {
+  border-color: #3B82F6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Chrome autofill clean override */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #FFFFFF inset !important;
+  -webkit-text-fill-color: var(--text) !important;
+}
+.dark input:-webkit-autofill,
+.dark input:-webkit-autofill:hover, 
+.dark input:-webkit-autofill:focus, 
+.dark input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #0C142B inset !important;
+  -webkit-text-fill-color: #F1F5F9 !important;
+}
+
+/* Button pulse & glow */
+.btn-primary-glow {
+  background-color: var(--primary);
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(40, 125, 250, 0.35);
+  transition: all 0.25s ease;
+}
+.btn-primary-glow:hover {
+  background-color: var(--primary-dark);
+  box-shadow: 0 8px 24px rgba(40, 125, 250, 0.45);
+  transform: translateY(-1px);
+}
+
+.btn-accent-glow {
+  background-color: var(--accent);
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(255, 122, 26, 0.35);
+  transition: all 0.25s ease;
+}
+.btn-accent-glow:hover {
+  background-color: #E8660B;
+  box-shadow: 0 8px 24px rgba(255, 122, 26, 0.48);
+  transform: translateY(-1px);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
