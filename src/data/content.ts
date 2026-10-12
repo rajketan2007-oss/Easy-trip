@@ -79,6 +79,11 @@ export const siteContent = {
       { raw: "8617398804", formatted: "86173 98804", isPrimary: false, tel: "+918617398804" },
     ],
     whatsappNumber: "919233300333",
+    socials: {
+      facebook: "https://www.facebook.com/share/1KQTwDas5N/",
+      youtube: "https://www.youtube.com/channel/UC6XItzv5OoTQ-RpXgZDlv5w",
+      instagram: "https://instagram.com/easytrip.official?srtk=cGV3eHh4cHowajht",
+    },
   },
 
   nav: {
@@ -833,6 +838,26 @@ export const siteContent = {
     popularDestinations: [
       "Shimla-Manali", "Kashmir", "Goa", "Kerala", "Darjeeling",
       "Sikkim", "Meghalaya", "Andaman", "Dubai", "Bali", "Maldives", "Europe"
+    ],
+    socialLinks: [
+      {
+        name: "Facebook",
+        href: "https://www.facebook.com/share/1KQTwDas5N/",
+        handle: "Easy Trip - Tours & Travels",
+        type: "facebook",
+      },
+      {
+        name: "Instagram",
+        href: "https://instagram.com/easytrip.official?srtk=cGV3eHh4cHowajht",
+        handle: "@easytrip.official",
+        type: "instagram",
+      },
+      {
+        name: "YouTube",
+        href: "https://www.youtube.com/channel/UC6XItzv5OoTQ-RpXgZDlv5w",
+        handle: "Easy Trip Official",
+        type: "youtube",
+      },
     ],
     copyright: "© 2026 Easy Trip Tour & Travels. All rights reserved.",
   },
