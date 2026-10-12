@@ -84,16 +84,26 @@ export function Hero({ onPlanTrip, onExplorePackages }: HeroProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-white/95 dark:bg-slate-900/90 backdrop-blur-md border border-white/60 dark:border-slate-700 shadow-md mb-6"
+            className="flex flex-wrap items-center gap-2.5 mb-6"
           >
-            <Sparkles className="w-3.5 h-3.5 text-accent animate-pulse" />
-            <span className="text-xs uppercase tracking-wider text-primary font-bold">
-              {siteContent.hero.eyebrow}
-            </span>
-            <span className="text-xs text-accent font-bold">&bull;</span>
-            <span className="text-xs uppercase tracking-wider text-text-muted dark:text-slate-300 font-semibold hidden sm:inline">
-              Durgapur &bull; Asansol
-            </span>
+            <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-white/95 dark:bg-slate-900/90 backdrop-blur-md border border-white/60 dark:border-slate-700 shadow-md">
+              <Sparkles className="w-3.5 h-3.5 text-accent animate-pulse" />
+              <span className="text-xs uppercase tracking-wider text-primary font-bold">
+                {siteContent.hero.eyebrow}
+              </span>
+              <span className="text-xs text-accent font-bold">&bull;</span>
+              <span className="text-xs uppercase tracking-wider text-text-muted dark:text-slate-300 font-semibold hidden sm:inline">
+                Durgapur &bull; Asansol
+              </span>
+            </div>
+
+            <button
+              onClick={onExplorePackages}
+              className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full bg-accent/90 hover:bg-accent text-white font-bold text-xs uppercase tracking-wider shadow-md hover:scale-105 active:scale-95 transition-all duration-200"
+            >
+              <span>🗓️ 2026 Tour Calendar (Nov &amp; Dec)</span>
+              <span>&rarr;</span>
+            </button>
           </motion.div>
 
           {/* Masked Slide-up Headline */}

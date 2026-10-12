@@ -3,6 +3,7 @@ import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { BookingForm } from './components/BookingForm';
 import { About } from './components/About';
+import { UpcomingTours } from './components/UpcomingTours';
 import { DomesticTours } from './components/DomesticTours';
 import { InternationalTours } from './components/InternationalTours';
 import { Reviews } from './components/Reviews';
@@ -58,7 +59,7 @@ export function App() {
   };
 
   const handleExplorePackages = () => {
-    smoothScrollTo('#domestic-tours', -40);
+    smoothScrollTo('#upcoming-tours', -40);
   };
 
   return (
@@ -100,6 +101,9 @@ export function App() {
           prefilledDestination={selectedDestination}
           prefilledTourType={selectedTourType}
         />
+
+        {/* 2.5. Upcoming Tours 2026 Calendar Section (Smooth Swipe Window) */}
+        <UpcomingTours onSelectDestination={handleSelectDestination} />
 
         {/* 3. About Us Section */}
         <About onPlanTrip={handlePlanTrip} />
