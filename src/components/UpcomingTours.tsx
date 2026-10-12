@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, type MouseEvent } from 'react';
+import { useState, useRef, useEffect, type MouseEvent, type TouchEvent } from 'react';
 import { motion } from 'framer-motion';
 import {
   Calendar,
@@ -44,12 +44,6 @@ export function UpcomingTours({ onSelectDestination }: UpcomingToursProps) {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [scrollProgress, setScrollProgress] = useState(0);
-
-  // Mouse drag-to-scroll state
-  const isDraggingRef = useRef(false);
-  const startXRef = useRef(0);
-  const scrollLeftRef = useRef(0);
-  const [isDragging, setIsDragging] = useState(false);
 
   // Filter tours
   const allTours = siteContent.upcomingTours.tours as unknown as UpcomingTour[];
@@ -100,42 +94,88 @@ export function UpcomingTours({ onSelectDestination }: UpcomingToursProps) {
     });
   };
 
-  // Mouse drag handling
+  // Mouse drag-to-scroll state
+  const isMouseDownRef = useRef(false);
+  const isDraggingRef = useRef(false);
+  const startXRef = useRef(0);
+  const scrollLeftRef = useRef(0);
+  const [isDragging, setIsDragging] = useState(false);
+
+  // Mouse drag handling (only sets dragging if mouse moved > 6px)
   const handleMouseDown = (e: MouseEvent<HTMLDivElement>) => {
     const el = scrollContainerRef.current;
     if (!el) return;
 
-    isDraggingRef.current = true;
-    setIsDragging(true);
+    isMouseDownRef.current = true;
+    isDraggingRef.current = false;
     startXRef.current = e.pageX - el.offsetLeft;
     scrollLeftRef.current = el.scrollLeft;
   };
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
-    if (!isDraggingRef.current) return;
+    if (!isMouseDownRef.current) return;
     const el = scrollContainerRef.current;
     if (!el) return;
 
-    e.preventDefault();
     const x = e.pageX - el.offsetLeft;
-    const walk = (x - startXRef.current) * 1.4; // drag multiplier
-    el.scrollLeft = scrollLeftRef.current - walk;
-  };
+    const walk = x - startXRef.current;
 
-  const handleMouseUpOrLeave = () => {
-    if (isDraggingRef.current) {
-      isDraggingRef.current = false;
-      setTimeout(() => setIsDragging(false), 50);
+    // Only engage drag if moved more than 6px
+    if (Math.abs(walk) > 6) {
+      if (!isDraggingRef.current) {
+        isDraggingRef.current = true;
+        setIsDragging(true);
+      }
+      el.scrollLeft = scrollLeftRef.current - walk * 1.3;
     }
   };
 
-  // Format WhatsApp Link for each tour
-  const getWhatsAppLink = (tour: UpcomingTour) => {
-    const message = `Hello Easy Trip Tour & Travels! ✈️\n\nI want to book my seat for the upcoming tour from your 2026 Tour Calendar:\n\n📍 Destination: ${tour.destination}\n📅 Departure Date: ${tour.date} ${tour.year}\n⏱️ Duration: ${tour.duration}\n💰 Price: ${tour.price} ${tour.priceSuffix}\n\nPlease share the detailed day-wise itinerary and booking confirmation details.`;
-    return `https://wa.me/${siteContent.agency.whatsappNumber}?text=${encodeURIComponent(message)}`;
+  const handleMouseUpOrLeave = () => {
+    isMouseDownRef.current = false;
+    if (isDraggingRef.current) {
+      setTimeout(() => {
+        isDraggingRef.current = false;
+        setIsDragging(false);
+      }, 80);
+    }
   };
 
-  const generalWhatsAppLink = `https://wa.me/${siteContent.agency.whatsappNumber}?text=${encodeURIComponent(
+  // Touch event tracking for mobile devices
+  const touchStartXRef = useRef(0);
+  const touchStartYRef = useRef(0);
+
+  const handleTouchStart = (e: TouchEvent<HTMLDivElement>) => {
+    if (e.touches.length > 0) {
+      touchStartXRef.current = e.touches[0].clientX;
+      touchStartYRef.current = e.touches[0].clientY;
+      isDraggingRef.current = false;
+    }
+  };
+
+  const handleTouchMove = (e: TouchEvent<HTMLDivElement>) => {
+    if (e.touches.length > 0) {
+      const deltaX = Math.abs(e.touches[0].clientX - touchStartXRef.current);
+      if (deltaX > 8) {
+        isDraggingRef.current = true;
+      }
+    }
+  };
+
+  const handleTouchEnd = () => {
+    if (isDraggingRef.current) {
+      setTimeout(() => {
+        isDraggingRef.current = false;
+      }, 100);
+    }
+  };
+
+  // Format WhatsApp Link specifically to 9233300333 with complete tour info
+  const getWhatsAppLink = (tour: UpcomingTour) => {
+    const message = `Hello Easy Trip Tour & Travels! ✈️\n\nI want to book my seat for the upcoming tour from your 2026 Tour Calendar:\n\n📍 Destination: ${tour.destination}\n📅 Departure Date: ${tour.date} (${tour.year})\n⏱️ Duration: ${tour.duration}\n💰 Price: ${tour.price} ${tour.priceSuffix}\n\nPlease share the detailed itinerary and confirm seat availability.`;
+    return `https://wa.me/919233300333?text=${encodeURIComponent(message)}`;
+  };
+
+  const generalWhatsAppLink = `https://wa.me/919233300333?text=${encodeURIComponent(
     'Hello Easy Trip! 🌟 I am interested in your 2026 Tour Calendar fixed departures (November & December). Please share package details and seat availability.'
   )}`;
 
@@ -255,32 +295,60 @@ export function UpcomingTours({ onSelectDestination }: UpcomingToursProps) {
           </div>
         </motion.div>
 
-        {/* Mobile Swipe Helper Hint */}
+        {/* Mobile Swipe Helper Hint with Touch Arrow Buttons */}
         <div className="flex sm:hidden items-center justify-between text-xs text-text-muted dark:text-slate-400 mb-3 px-1 font-medium">
           <span className="flex items-center gap-1.5">
             <span className="inline-block w-2 h-2 rounded-full bg-accent animate-ping" />
-            Swipe cards smoothly to explore
+            Swipe or tap arrows to explore
           </span>
-          <span className="font-mono font-bold text-primary dark:text-blue-400">
-            {filteredTours.length} departures
-          </span>
+          <div className="flex items-center space-x-1.5">
+            <button
+              onClick={() => scrollByAmount('left')}
+              disabled={!canScrollLeft}
+              aria-label="Previous tour"
+              className={`p-1.5 rounded-full border transition-all active:scale-90 ${
+                canScrollLeft
+                  ? 'bg-white dark:bg-[#111D3D] border-slate-300 dark:border-[#1D3063] text-primary dark:text-blue-400 shadow-sm'
+                  : 'bg-slate-100 dark:bg-slate-800 border-transparent text-slate-300 dark:text-slate-600'
+              }`}
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => scrollByAmount('right')}
+              disabled={!canScrollRight}
+              aria-label="Next tour"
+              className={`p-1.5 rounded-full border transition-all active:scale-90 ${
+                canScrollRight
+                  ? 'bg-white dark:bg-[#111D3D] border-slate-300 dark:border-[#1D3063] text-primary dark:text-blue-400 shadow-sm'
+                  : 'bg-slate-100 dark:bg-slate-800 border-transparent text-slate-300 dark:text-slate-600'
+              }`}
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
         {/* SWIPEABLE CAROUSEL CONTAINER */}
         <div className="relative -mx-4 sm:mx-0">
           <div
             ref={scrollContainerRef}
+            data-lenis-prevent
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUpOrLeave}
             onMouseLeave={handleMouseUpOrLeave}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
             style={{
               scrollSnapType: 'x mandatory',
               WebkitOverflowScrolling: 'touch',
-              touchAction: 'pan-y',
+              touchAction: 'pan-x pan-y',
+              overscrollBehaviorX: 'contain',
               cursor: isDragging ? 'grabbing' : 'grab',
             }}
-            className="flex items-stretch gap-5 sm:gap-6 overflow-x-auto no-scrollbar px-4 sm:px-1 py-4 scroll-smooth select-none"
+            className="flex items-stretch gap-4 sm:gap-6 overflow-x-auto no-scrollbar px-4 sm:px-1 py-4"
           >
             {filteredTours.map((tour, index) => {
               const whatsappUrl = getWhatsAppLink(tour);
@@ -289,8 +357,8 @@ export function UpcomingTours({ onSelectDestination }: UpcomingToursProps) {
                 <div
                   key={tour.id}
                   data-tour-card
-                  style={{ scrollSnapAlign: 'start' }}
-                  className="w-[82vw] sm:w-[340px] md:w-[360px] shrink-0 rounded-card bg-white dark:bg-[#111D3D] border border-slate-200 dark:border-[#1D3063] hover:border-primary/50 dark:hover:border-blue-400/50 shadow-card hover:shadow-card-hover transition-all duration-300 flex flex-col justify-between overflow-hidden group"
+                  style={{ scrollSnapAlign: 'start', scrollSnapStop: 'normal' }}
+                  className="w-[84vw] sm:w-[340px] md:w-[360px] shrink-0 rounded-card bg-white dark:bg-[#111D3D] border border-slate-200 dark:border-[#1D3063] hover:border-primary/50 dark:hover:border-blue-400/50 shadow-card hover:shadow-card-hover transition-all duration-300 flex flex-col justify-between overflow-hidden group select-none"
                 >
                   {/* Card Media Top Frame */}
                   <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-900">
@@ -397,9 +465,11 @@ export function UpcomingTours({ onSelectDestination }: UpcomingToursProps) {
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={(e) => {
-                            if (isDragging) e.preventDefault();
+                            if (isDraggingRef.current) {
+                              e.preventDefault();
+                            }
                           }}
-                          className="w-full py-3 px-4 rounded-btn bg-gradient-to-r from-[#25D366] to-[#128C7E] hover:from-[#20bd5a] hover:to-[#0f7a6e] text-white font-bold text-xs uppercase tracking-wider shadow-[0_4px_16px_rgba(37,211,102,0.3)] hover:shadow-[0_8px_24px_rgba(37,211,102,0.45)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 flex items-center justify-center space-x-2 text-center group/btn"
+                          className="w-full py-3 px-4 rounded-btn bg-gradient-to-r from-[#25D366] to-[#128C7E] hover:from-[#20bd5a] hover:to-[#0f7a6e] text-white font-bold text-xs uppercase tracking-wider shadow-[0_4px_16px_rgba(37,211,102,0.3)] hover:shadow-[0_8px_24px_rgba(37,211,102,0.45)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 flex items-center justify-center space-x-2 text-center group/btn cursor-pointer"
                         >
                           {/* WhatsApp icon */}
                           <svg
